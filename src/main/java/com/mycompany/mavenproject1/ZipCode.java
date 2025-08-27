@@ -21,12 +21,13 @@ public class ZipCode {
         if(zip < 0 || zip > 99999) {
             System.out.println("Error : mus tbe 5 digits");
             valid = false;
-            this.zip = 0;
+            this.Zip = 0;
         }
         this.Zip = zip;
         valid = true;
     }
     
+    //Takes string barCode and transforms it into binary numbers
     public ZipCode(String barCode) {
         this.Zip = 0;
         valid = false;
@@ -49,12 +50,41 @@ public class ZipCode {
         }
         
         String zipDigits = "";
-        int [] weights = {7, 4, 2, 1,0);
+        int [] weights = {7, 4, 2, 1,0};
         
         for (int i = 0; i < 25;  i +=5) {
-            String group
+            String group = core.substring(i, i+5);
+            
+            //in the group must contain 2 ones or else not acceptable
+            int ones = 0;
+            for (int j = 0; j < 5; j++) {
+                if (group.charAt(j) == '1') {
+                    ones++;
+                }
+            }
+            
+            if (ones != 2) {
+                System.out.println("ERROR");
+                return;
+            }
+            
+            int sum = 0;
+            for (int j = 0; j < group.length(); j++) {
+                if(group.charAt(j) == '1') {
+                    sum += weights[j];
+                }
+            }
+            
+            //for if sum is equal to 11
+            int digit = (sum == 11) ? 0 :sum;
+            
+            if (digit < 0 || digit > 9) {
+                System.out.println("ERROR");
+                return;
+            }
+            
+            zipDigits += digit;
         }
     }
-        
-    }
 }
+
