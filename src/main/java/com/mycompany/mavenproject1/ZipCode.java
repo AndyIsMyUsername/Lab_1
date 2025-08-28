@@ -13,7 +13,16 @@ public class ZipCode {
     private boolean valid;
     
     private static final String[] DIGIT_TO_CODE = {
-        "11000",
+        "11000", //0
+        "00011", //1
+        "00101", //2
+        "00110", //3
+        "01001", //4
+        "01010", //5
+        "01100", //6
+        "10001", //7
+        "10010", //8
+        "10100"  //9
         
     };
     
@@ -86,5 +95,28 @@ public class ZipCode {
             zipDigits += digit;
         }
     }
+    
+    //GET BAR CODE FROM TO BINARY
+    public String GetBarCode(){
+        
+        //if zip is invalid then it returns error
+        if (Zip < 0 || Zip > 99999) {
+            return "ERROR";
+        }
+        
+        //
+        String ZipString = String.format("05d", Zip);
+        
+        //must start with 1
+        String result = "1";
+        for (int i = 0; i< ZipString.length(); i++) {
+            int digit = ZipString.charAt(i) - '0';
+            result += DIGIT_TO_CODE[digit];
+        }
+       
+        //must end with 1
+        result += "1";
+        
+        return result;
+    }
 }
-
