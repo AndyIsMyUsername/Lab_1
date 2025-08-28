@@ -10,7 +10,6 @@ package com.mycompany.mavenproject1;
  */
 public class ZipCode {
     public int Zip;
-    private boolean valid;
     
     private static final String[] DIGIT_TO_CODE = {
         "11000", //0
@@ -26,43 +25,42 @@ public class ZipCode {
         
     };
     
+    
+    //Constructor from Integer
     public ZipCode(int zip) {
         if(zip < 0 || zip > 99999) {
             System.out.println("Error : mus tbe 5 digits");
-            valid = false;
             this.Zip = 0;
+        } else {
+            this.Zip = zip;
         }
-        this.Zip = zip;
-        valid = true;
     }
     
     //Takes string barCode and transforms it into binary numbers
-    public ZipCode(String barCode) {
-        this.Zip = 0;
-        valid = false;
+    public int parseBarCode (String barCode) {
         
         if (barCode.length() != 27) {
             System.out.println("ERROR");
-            return;
+            return 0;
         }
         
         if (barCode.charAt(0) != '1' || barCode.charAt(barCode.length() - 1) != '1') {
             System.out.println("ERROR : BARCODE MUST START AND END WITH 1");
-            return;
+            return 0;
         }
         
         String core = barCode.substring(1, barCode.length() - 1);
         
         if (core.length() != 25) {
             System.out.println("ERROR");
-            return;
+            return 0;
         }
         
         String zipDigits = "";
         int [] weights = {7, 4, 2, 1,0};
         
         for (int i = 0; i < 25;  i +=5) {
-            String group = core.substring(i, i+5);
+            String group = core.substring(i, i + 5);
             
             //in the group must contain 2 ones or else not acceptable
             int ones = 0;
@@ -72,9 +70,10 @@ public class ZipCode {
                 }
             }
             
+            // if there is not 2 ones then error
             if (ones != 2) {
                 System.out.println("ERROR");
-                return;
+                return 0;
             }
             
             int sum = 0;
@@ -89,11 +88,12 @@ public class ZipCode {
             
             if (digit < 0 || digit > 9) {
                 System.out.println("ERROR");
-                return;
+                return 0;
             }
             
             zipDigits += digit;
         }
+        return Integer.parseInt(zipDigits);
     }
     
     //GET BAR CODE FROM TO BINARY
