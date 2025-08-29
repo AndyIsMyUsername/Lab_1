@@ -73,7 +73,7 @@ public class MainClass {
            
         System.out.printf ("Testing %s for %s %n" , badZips[i][0], badZips[i][1]);
             // Construct ZipCode object and it will detect errors
-            ZipCode testZip = new ZipCode(badZips[i][ 0]);
+            ZipCode testZip = new ZipCode(badZips[i][0]);
            System.out.println();
         }
     }

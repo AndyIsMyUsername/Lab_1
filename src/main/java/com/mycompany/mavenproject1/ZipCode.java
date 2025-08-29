@@ -11,6 +11,7 @@ package com.mycompany.mavenproject1;
 public class ZipCode {
     public int Zip;
     
+    //table for each digit 
     private static final String[] DIGIT_TO_CODE = {
         "11000", //0
         "00011", //1
@@ -25,18 +26,28 @@ public class ZipCode {
         
     };
     
+    //Constructor taking barCode String and uses parseBarCoded method to initialize zip
+    public ZipCode (String barCode) {
+        this.Zip = parseBarCode(barCode);
+    }
     
     //Constructor from Integer
     public ZipCode(int zip) {
-        if(zip < 0 || zip > 99999) {
-            System.out.println("Error : mus tbe 5 digits");
+        
+        //checks for 6 digit or more
+        if(zip < 0 || zip > 999999) {
+            System.out.println("Error : must tbe 5 digits");
             this.Zip = 0;
         } else {
             this.Zip = zip;
         }
     }
     
-    //Takes string barCode and transforms it into binary numbers
+    /**
+     * parse a barCode from String to integer
+     * @param barCode takes barCode as String
+     * @return 
+     */
     public int parseBarCode (String barCode) {
         
         if (barCode.length() != 27) {
@@ -56,17 +67,23 @@ public class ZipCode {
             return 0;
         }
         
+        //final result as String
         String zipDigits = "";
         int [] weights = {7, 4, 2, 1,0};
         
-        for (int i = 0; i < 25;  i +=5) {
+        for (int i = 0; i < 25;  i += 5) {
             String group = core.substring(i, i + 5);
             
             //in the group must contain 2 ones or else not acceptable
             int ones = 0;
+            int sum = 0;
             for (int j = 0; j < 5; j++) {
                 if (group.charAt(j) == '1') {
+                    sum += weights[j];
                     ones++;
+                } else if (group.charAt(j) != '0') {
+                    System.out.println("ERROR");
+                    return 0;
                 }
             }
             
@@ -76,14 +93,7 @@ public class ZipCode {
                 return 0;
             }
             
-            int sum = 0;
-            for (int j = 0; j < group.length(); j++) {
-                if(group.charAt(j) == '1') {
-                    sum += weights[j];
-                }
-            }
-            
-            //for if sum is equal to 11
+            //for if sum is equal to 11 (special rule)
             int digit = (sum == 11) ? 0 :sum;
             
             if (digit < 0 || digit > 9) {
@@ -93,23 +103,28 @@ public class ZipCode {
             
             zipDigits += digit;
         }
+        //change the String into numbers
         return Integer.parseInt(zipDigits);
     }
     
-    //GET BAR CODE FROM TO BINARY
+    /**
+     * encodes the stored integer ZIP code
+     * @return barCode as a String of 27 digits
+     */
     public String GetBarCode(){
         
         //if zip is invalid then it returns error
-        if (Zip < 0 || Zip > 99999) {
+        if (Zip < 0 || Zip > 999999) {
             return "ERROR";
         }
         
-        //
-        String ZipString = String.format("05d", Zip);
+        String ZipString = String.format("%05d", Zip);
         
         //must start with 1
         String result = "1";
-        for (int i = 0; i< ZipString.length(); i++) {
+        
+        
+        for (int i = 0; i < ZipString.length(); i++) {
             int digit = ZipString.charAt(i) - '0';
             result += DIGIT_TO_CODE[digit];
         }
